@@ -1,5 +1,8 @@
 package conf
 
+// this is the entry point, i think
+// dont need to change, as its just the file reading stuff..
+
 import (
 	"encoding/json"
 	"fmt"
