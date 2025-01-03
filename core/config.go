@@ -106,7 +106,7 @@ type Config struct {
 // Configuration for a database table
 type Table struct {
 	Name      string
-	Schema    string
+	Schema    string // do not change, as a table can have only one schema
 	Table     string // Inherits Table
 	Type      string
 	Blocklist []string
