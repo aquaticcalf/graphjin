@@ -26,11 +26,11 @@ func (c *compilerContext) colWithTableID(table string, id int32, col string) {
 }
 
 func (c *compilerContext) table(schema, table string, alias bool) {
-	if schema != "" {
-		c.quoted(schema)
-		c.w.WriteString(`.`)
+	sel := &qcode.Select{
+		Table:  table,
+		Schema: schema,
 	}
-	c.quoted(table)
+	c.renderTable(sel)
 	if alias {
 		c.w.WriteString(` AS `)
 		c.quoted(table)

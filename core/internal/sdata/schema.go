@@ -31,6 +31,8 @@ type DBSchema struct {
 	edgesIndex        map[string][]edgeInfo   // edges index
 	allEdges          map[int32]TEdge         // all edges
 	relationshipGraph *util.Graph             // relationship graph
+	allowedSchemas    map[string]bool         // track allowed schemas
+	defaultSchema     string                  // default schema
 }
 
 type RelType int
@@ -70,6 +72,7 @@ type DBRel struct {
 func NewDBSchema(
 	info *DBInfo,
 	aliases map[string][]string,
+	config Config,
 ) (*DBSchema, error) {
 	schema := &DBSchema{
 		dbType:            info.Type,
@@ -83,6 +86,12 @@ func NewDBSchema(
 		edgesIndex:        make(map[string][]edgeInfo),
 		allEdges:          make(map[int32]TEdge),
 		relationshipGraph: util.NewGraph(),
+		allowedSchemas:    make(map[string]bool),
+		defaultSchema:     config.DefaultSchema,
+	}
+
+	for _, s := range config.AllowedSchemas {
+		schema.allowedSchemas[s] = true
 	}
 
 	for _, t := range info.Tables {

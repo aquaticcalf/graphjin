@@ -11,99 +11,98 @@ import (
 )
 
 // Configuration for the GraphJin compiler core
+// Config holds the configuration settings for the application.
 type Config struct {
-	// Is used to encrypt opaque values such as the cursor. Auto-generated when not set
+	// SecretKey is used to encrypt opaque values such as the cursor. Auto-generated when not set.
 	SecretKey string `mapstructure:"secret_key" json:"secret_key" yaml:"secret_key"  jsonschema:"title=Secret Key"`
 
-	// When set to true it disables the allow list workflow
+	// DisableAllowList, when set to true, disables the allow list workflow.
 	DisableAllowList bool `mapstructure:"disable_allow_list" json:"disable_allow_list" yaml:"disable_allow_list" jsonschema:"title=Disable Allow List,default=false"`
 
-	// When set to true a database schema file will be generated in dev mode and
-	// used in production mode. Auto database discovery will be disabled
-	// in production mode.
+	// EnableSchema, when set to true, generates a database schema file in dev mode and uses it in production mode.
+	// Auto database discovery will be disabled in production mode.
 	EnableSchema bool `mapstructure:"enable_schema" json:"enable_schema" yaml:"enable_schema" jsonschema:"title=Enable Schema,default=false"`
 
-	// When set to true an introspection json file will be generated in dev mode.
-	// This file can be used with other GraphQL tooling to generate clients, enable
-	// autocomplete, etc
+	// EnableIntrospection, when set to true, generates an introspection JSON file in dev mode.
+	// This file can be used with other GraphQL tooling to generate clients, enable autocomplete, etc.
 	EnableIntrospection bool `mapstructure:"enable_introspection" json:"enable_introspection" yaml:"enable_introspection" jsonschema:"title=Generate introspection JSON,default=false"`
 
-	// Forces the database session variable 'user.id' to be set to the user id
+	// SetUserID forces the database session variable 'user.id' to be set to the user ID.
 	SetUserID bool `mapstructure:"set_user_id" json:"set_user_id" yaml:"set_user_id" jsonschema:"title=Set User ID,default=false"`
 
-	// This ensures that for anonymous users (role 'anon') all tables are blocked
-	// from queries and mutations. To open access to tables for anonymous users
-	// they have to be added to the 'anon' role config
+	// DefaultBlock ensures that for anonymous users (role 'anon'), all tables are blocked from queries and mutations.
+	// To open access to tables for anonymous users, they have to be added to the 'anon' role config.
 	DefaultBlock bool `mapstructure:"default_block" json:"default_block" yaml:"default_block" jsonschema:"title=Block tables for anonymous users,default=true"`
 
-	// This is a list of variables that can be leveraged in your queries.
-	// (eg. variable admin_id will be $admin_id in the query)
+	// Vars is a list of variables that can be leveraged in your queries.
+	// (e.g., variable admin_id will be $admin_id in the query)
 	Vars map[string]string `mapstructure:"variables" json:"variables" yaml:"variables" jsonschema:"title=Variables"`
 
-	// This is a list of variables that map to http header values
+	// HeaderVars is a list of variables that map to HTTP header values.
 	HeaderVars map[string]string `mapstructure:"header_variables" json:"header_variables" yaml:"header_variables" jsonschema:"title=Header Variables"`
 
-	// A list of tables and columns that should disallowed in any and all queries
+	// Blocklist is a list of tables and columns that should be disallowed in any and all queries.
 	Blocklist []string `jsonschema:"title=Block List"`
 
-	// The configs for custom resolvers. For example the `remote_api`
-	// resolver would join json from a remote API into your query response
+	// Resolvers contains the configs for custom resolvers. For example, the `remote_api`
+	// resolver would join JSON from a remote API into your query response.
 	Resolvers []ResolverConfig `jsonschema:"-"`
 
-	// All table specific configuration such as aliased tables and relationships
-	// between tables
+	// Tables contains all table-specific configuration such as aliased tables and relationships between tables.
 	Tables []Table `jsonschema:"title=Tables"`
 
-	// An SQL query if set enables attribute based access control. This query is
-	// used to fetch the user attribute that then dynamically define the users role
+	// RolesQuery is an SQL query that, if set, enables attribute-based access control.
+	// This query is used to fetch the user attribute that then dynamically defines the user's role.
 	RolesQuery string `mapstructure:"roles_query" json:"roles_query" yaml:"roles_query" jsonschema:"title=Roles Query"`
 
-	// Roles contains the configuration for all the roles you want to support 'user' and
-	// 'anon' are two default roles. The 'user' role is used when a user ID is available
-	// and 'anon' when it's not. Use the 'Roles Query' config to add more custom roles
+	// Roles contains the configuration for all the roles you want to support.
+	// 'user' and 'anon' are two default roles. The 'user' role is used when a user ID is available,
+	// and 'anon' when it's not. Use the 'Roles Query' config to add more custom roles.
 	Roles []Role
 
-	// Database type name Defaults to 'postgres' (options: mysql, postgres)
+	// DBType is the database type name. Defaults to 'postgres' (options: mysql, postgres).
 	DBType string `mapstructure:"db_type" json:"db_type" yaml:"db_type" jsonschema:"title=Database Type,enum=postgres,enum=mysql"`
 
-	// Log warnings and other debug information
+	// Debug logs warnings and other debug information.
 	Debug bool `jsonschema:"title=Debug,default=false"`
 
-	// Log SQL Query variable values
+	// LogVars logs SQL query variable values.
 	LogVars bool `mapstructure:"log_vars" json:"log_vars" yaml:"log_vars" jsonschema:"title=Log Variables,default=false"`
 
-	// Database polling duration (in seconds) used by subscriptions to
-	// query for updates.
+	// SubsPollDuration is the database polling duration (in seconds) used by subscriptions to query for updates.
 	SubsPollDuration time.Duration `mapstructure:"subs_poll_duration" json:"subs_poll_duration" yaml:"subs_poll_duration" jsonschema:"title=Subscription Polling Duration,default=5s"`
 
-	// The default max limit (number of rows) when a limit is not defined in
-	// the query or the table role config.
+	// DefaultLimit is the default max limit (number of rows) when a limit is not defined in the query or the table role config.
 	DefaultLimit int `mapstructure:"default_limit" json:"default_limit" yaml:"default_limit" jsonschema:"title=Default Row Limit,default=20"`
 
-	// Disable all aggregation functions like count, sum, etc
+	// DisableAgg disables all aggregation functions like count, sum, etc.
 	DisableAgg bool `mapstructure:"disable_agg_functions" json:"disable_agg_functions" yaml:"disable_agg_functions" jsonschema:"title=Disable Aggregations,default=false"`
 
-	// Disable all functions like count, length,  etc
+	// DisableFuncs disables all functions like count, length, etc.
 	DisableFuncs bool `mapstructure:"disable_functions" json:"disable_functions" yaml:"disable_functions" jsonschema:"title=Disable Functions,default=false"`
 
-	// Enable automatic coversion of camel case in GraphQL to snake case in SQL
+	// EnableCamelcase enables automatic conversion of camel case in GraphQL to snake case in SQL.
 	EnableCamelcase bool `mapstructure:"enable_camelcase" json:"enable_camelcase" yaml:"enable_camelcase" jsonschema:"title=Enable Camel Case,default=false"`
 
-	// When enabled GraphJin runs with production level security defaults.
-	// For example allow lists are enforced.
+	// Production, when enabled, runs with production-level security defaults.
+	// For example, allow lists are enforced.
 	Production bool `jsonschema:"title=Production Mode,default=false"`
 
-	// Duration for polling the database to detect schema changes
+	// DBSchemaPollDuration is the duration for polling the database to detect schema changes.
 	DBSchemaPollDuration time.Duration `mapstructure:"db_schema_poll_duration" json:"db_schema_poll_duration" yaml:"db_schema_poll_duration" jsonschema:"title=Schema Change Detection Polling Duration,default=10s"`
 
-	// When set to true it disables production security features like enforcing the allow list
+	// DisableProdSecurity, when set to true, disables production security features like enforcing the allow list.
 	DisableProdSecurity bool `mapstructure:"disable_production_security" json:"disable_production_security" yaml:"disable_production_security" jsonschema:"title=Disable Production Security"`
 
-	// The filesystem to use for this instance of GraphJin
+	// FS is the filesystem to use for this instance of GraphJin.
 	FS interface{} `mapstructure:"-" jsonschema:"-" json:"-"`
-}
 
-// Configuration for a database table
+	// AllowedSchemas is a list of allowed schemas.
+	AllowedSchemas []string `mapstructure:"allowed_schemas" json:"allowed_schemas" yaml:"allowed_schemas"`
+
+	// DefaultSchema is the default schema.
+	DefaultSchema string `mapstructure:"default_schema" json:"default_schema" yaml:"default_schema"`
+}
 type Table struct {
 	Name      string
 	Schema    string
