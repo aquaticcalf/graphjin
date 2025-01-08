@@ -419,17 +419,16 @@ func (co *Compiler) compileQuery(qc *QCode, op *graph.Operation, role string) er
 
     // Iterate over the fields in the operation
     for _, field := range op.Fields {
-        // Parse the table name and schema name from the field name
         tableName, schemaName := co.parseTableName(field.Name)
         
         // Validate the schema name
         if err := co.validateSchema(schemaName); err != nil {
             return err
         }
-        // ... continue processing with tableName and schemaName
-        // Process the field if it is a top-level field (ParentID is -1)
+
+        // Process the field with the parsed table name
         if field.ParentID == -1 {
-            if field.Name == "__typename" && op.Name != "" {
+            if tableName == "__typename" && op.Name != "" {
                 qc.Typename = true
             }
             val := field.ID | (-1 << 16)
@@ -1336,14 +1335,14 @@ func (co *Compiler) parseTableName(name string) (tableName, schemaName string) {
     if len(parts) == 2 {
         return strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1])
     }
-    return name, co.s.defaultSchema
+    return name, co.s.DefaultSchema()
 }
 
 func (co *Compiler) validateSchema(schema string) error {
     if schema == "" {
         return nil
     }
-    if !co.s.allowedSchemas[schema] {
+    if !co.s.IsAllowedSchema(schema) {
         return fmt.Errorf("schema '%s' not allowed", schema)
     }
     return nil

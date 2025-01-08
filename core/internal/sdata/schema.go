@@ -100,6 +100,9 @@ func NewDBSchema(
 		schema.allowedSchemas[s] = true
 	}
 
+	// Always allow default schema
+	schema.allowedSchemas[config.DefaultSchema] = true
+
 	for _, t := range info.Tables {
 		nid := schema.addNode(t)
 		schema.addAliases(schema.tables[nid], nid, aliases[t.Name])
@@ -450,4 +453,16 @@ func (s *DBSchema) DBSchema() string {
 // DBName returns the database name
 func (s *DBSchema) DBName() string {
 	return s.name
+}
+
+// Add these methods to DBSchema struct
+func (s *DBSchema) DefaultSchema() string {
+    return s.defaultSchema
+}
+
+func (s *DBSchema) IsAllowedSchema(schema string) bool {
+    if s.allowedSchemas == nil {
+        return schema == s.defaultSchema
+    }
+    return s.allowedSchemas[schema]
 }

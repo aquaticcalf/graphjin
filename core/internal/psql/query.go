@@ -521,7 +521,6 @@ func (c *compilerContext) renderFromCursor(sel *qcode.Select) {
 
 func (c *compilerContext) renderJSONTable(sel *qcode.Select) {
     c.w.WriteString(`JSON_TABLE(`)
-    // Use schema-aware table reference
     if sel.Rel.Left.Col.Schema != "" {
         c.w.WriteString(QuoteIdent(sel.Rel.Left.Col.Schema))
         c.w.WriteString(".")

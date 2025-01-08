@@ -3,6 +3,9 @@ package psql
 import (
 	"bytes"
 	"strconv"
+	"strings"
+
+	"github.com/dosco/graphjin/core/v3/internal/qcode"
 )
 
 func (c *compilerContext) alias(alias string) {
@@ -64,4 +67,15 @@ func (c *compilerContext) squoted(identifier string) {
 
 func int32String(w *bytes.Buffer, val int32) {
 	w.WriteString(strconv.FormatInt(int64(val), 10))
+}
+
+func QuoteIdent(identifier string) string {
+    // Remove any existing quotes
+    identifier = strings.Trim(identifier, `"`)
+    identifier = strings.Trim(identifier, "`")
+    
+    // Replace any existing quotes with escaped quotes
+    identifier = strings.ReplaceAll(identifier, `"`, `""`)
+    
+    return `"` + identifier + `"`
 }
