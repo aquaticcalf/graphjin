@@ -167,9 +167,15 @@ func (gj *graphjinEngine) _initSchema() (err error) {
 		return
 	}
 
+	sconfig := sdata.Config{
+		AllowedSchemas: gj.conf.AllowedSchemas,
+		DefaultSchema:  gj.conf.DefaultSchema,
+	}
+
 	gj.schema, err = sdata.NewDBSchema(
 		gj.dbinfo,
-		getDBTableAliases(gj.conf))
+		getDBTableAliases(gj.conf),
+		sconfig)
 	if err != nil {
 		return
 	}

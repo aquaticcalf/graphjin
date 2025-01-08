@@ -68,6 +68,12 @@ type DBRel struct {
 	Right DBRelRight
 }
 
+// Add at the top with other type definitions
+type Config struct {
+    AllowedSchemas []string // List of allowed schemas
+    DefaultSchema  string   // Default schema to use
+}
+
 // NewDBSchema creates a new database schema
 func NewDBSchema(
 	info *DBInfo,
