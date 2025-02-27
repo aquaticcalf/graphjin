@@ -44,6 +44,7 @@ type Config struct {
 	DBVersion       int
 	SecPrefix       []byte
 	EnableCamelcase bool
+	DefaultSchema   string // default schema
 }
 
 type Compiler struct {
@@ -52,6 +53,7 @@ type Compiler struct {
 	cv              int    // db version
 	pf              []byte // security prefix
 	enableCamelcase bool
+	defaultSchema   string // default schema
 }
 
 func NewCompiler(conf Config) *Compiler {
@@ -61,6 +63,7 @@ func NewCompiler(conf Config) *Compiler {
 		cv:              conf.DBVersion,
 		pf:              conf.SecPrefix,
 		enableCamelcase: conf.EnableCamelcase,
+		defaultSchema:   conf.DefaultSchema,
 	}
 }
 
@@ -389,7 +392,7 @@ func (c *compilerContext) renderPostgreaOnlyJoinTables(sel *qcode.Select) {
 
 func (c *compilerContext) renderJoin(join qcode.Join) {
 	c.w.WriteString(` INNER JOIN `)
-	c.w.WriteString(join.Rel.Left.Ti.Name)
+	c.renderTable(&qcode.Select{Table: join.Rel.Left.Ti.Name, Schema: join.Rel.Left.Ti.Schema})
 	c.w.WriteString(` ON ((`)
 	c.renderExp(join.Rel.Left.Ti, join.Filter, false)
 	c.w.WriteString(`))`)
@@ -484,7 +487,7 @@ func (c *compilerContext) renderFrom(sel *qcode.Select) {
 	c.w.WriteString(` FROM `)
 
 	if c.qc.Type == qcode.QTMutation {
-		c.quoted(sel.Table)
+		c.renderTable(sel)
 		return
 	}
 
@@ -518,7 +521,11 @@ func (c *compilerContext) renderFromCursor(sel *qcode.Select) {
 
 func (c *compilerContext) renderJSONTable(sel *qcode.Select) {
 	c.w.WriteString(`JSON_TABLE(`)
-	c.colWithTable(sel.Rel.Left.Col.Table, sel.Rel.Left.Col.Name)
+	if sel.Rel.Left.Col.Schema != "" {
+		c.w.WriteString(QuoteIdent(sel.Rel.Left.Col.Schema))
+		c.w.WriteString(".")
+	}
+	c.w.WriteString(QuoteIdent(sel.Rel.Left.Col.Table))
 	c.w.WriteString(`, "$[*]" COLUMNS(`)
 
 	for i, col := range sel.Ti.Columns {
@@ -533,7 +540,7 @@ func (c *compilerContext) renderJSONTable(sel *qcode.Select) {
 		c.w.WriteString(`" ERROR ON ERROR`)
 	}
 	c.w.WriteString(`)) AS`)
-	c.quoted(sel.Table)
+	c.renderTable(sel)
 }
 
 func (c *compilerContext) renderSelectToRecordSet(sel *qcode.Select) {
@@ -542,7 +549,7 @@ func (c *compilerContext) renderSelectToRecordSet(sel *qcode.Select) {
 	c.w.WriteString(`_to_recordset(`)
 	c.colWithTable(sel.Rel.Left.Col.Table, sel.Rel.Left.Col.Name)
 	c.w.WriteString(`) AS `)
-	c.quoted(sel.Table)
+	c.renderTable(sel)
 
 	c.w.WriteString(`(`)
 	for i, col := range sel.Ti.Columns {
@@ -701,4 +708,12 @@ func (c *compilerContext) renderDistinctOn(sel *qcode.Select) {
 		c.colWithTable(sel.Table, col.Name)
 	}
 	c.w.WriteString(`) `)
+}
+
+func (c *compilerContext) renderTable(sel *qcode.Select) {
+	if sel.Schema != "" && sel.Schema != c.defaultSchema {
+		c.w.WriteString(QuoteIdent(sel.Schema))
+		c.w.WriteString(".")
+	}
+	c.w.WriteString(QuoteIdent(sel.Table))
 }

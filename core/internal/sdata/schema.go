@@ -31,6 +31,8 @@ type DBSchema struct {
 	edgesIndex        map[string][]edgeInfo   // edges index
 	allEdges          map[int32]TEdge         // all edges
 	relationshipGraph *util.Graph             // relationship graph
+	allowedSchemas    map[string]bool         // track allowed schemas
+	defaultSchema     string                  // default schema
 }
 
 type RelType int
@@ -66,10 +68,17 @@ type DBRel struct {
 	Right DBRelRight
 }
 
+// Add at the top with other type definitions
+type Config struct {
+	AllowedSchemas []string // List of allowed schemas
+	DefaultSchema  string   // Default schema to use
+}
+
 // NewDBSchema creates a new database schema
 func NewDBSchema(
 	info *DBInfo,
 	aliases map[string][]string,
+	config Config,
 ) (*DBSchema, error) {
 	schema := &DBSchema{
 		dbType:            info.Type,
@@ -83,7 +92,16 @@ func NewDBSchema(
 		edgesIndex:        make(map[string][]edgeInfo),
 		allEdges:          make(map[int32]TEdge),
 		relationshipGraph: util.NewGraph(),
+		allowedSchemas:    make(map[string]bool),
+		defaultSchema:     config.DefaultSchema,
 	}
+
+	for _, s := range config.AllowedSchemas {
+		schema.allowedSchemas[s] = true
+	}
+
+	// Always allow default schema
+	schema.allowedSchemas[config.DefaultSchema] = true
 
 	for _, t := range info.Tables {
 		nid := schema.addNode(t)
@@ -435,4 +453,37 @@ func (s *DBSchema) DBSchema() string {
 // DBName returns the database name
 func (s *DBSchema) DBName() string {
 	return s.name
+}
+
+// Add these methods to DBSchema struct
+func (s *DBSchema) DefaultSchema() string {
+	return s.defaultSchema
+}
+
+func (s *DBSchema) IsAllowedSchema(schema string) bool {
+	if s.allowedSchemas == nil {
+		return schema == s.defaultSchema
+	}
+	return s.allowedSchemas[schema]
+}
+
+// ParseCrossSchemaTableName parses a table name in the format "tablenameofschemaname" and returns the table name and schema name separately.
+func (s *DBSchema) ParseCrossSchemaTableName(fullName string) (tableName, schemaName string) {
+	parts := strings.Split(fullName, "of")
+	if len(parts) == 2 {
+		return parts[0], parts[1]
+	}
+	return fullName, s.defaultSchema
+}
+
+// GetTableByFullName returns a table by its full name
+func (s *DBSchema) GetTableByFullName(fullName string) (DBTable, bool) {
+	tableName, schemaName := s.ParseCrossSchemaTableName(fullName)
+
+	for _, t := range s.tables {
+		if t.Name == tableName && t.Schema == schemaName {
+			return t, true
+		}
+	}
+	return DBTable{}, false
 }
