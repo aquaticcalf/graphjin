@@ -12,7 +12,7 @@ import (
 
 // Configuration for the GraphJin compiler core
 type Config struct {
-	// Config holds the configuration settings for the application.
+	// Is used to encrypt opaque values such as the cursor. Auto-generated when not set
 	SecretKey string `mapstructure:"secret_key" json:"secret_key" yaml:"secret_key"  jsonschema:"title=Secret Key"`
 
 	// When set to true it disables the allow list workflow
@@ -43,7 +43,7 @@ type Config struct {
 	// This is a list of variables that map to http header values
 	HeaderVars map[string]string `mapstructure:"header_variables" json:"header_variables" yaml:"header_variables" jsonschema:"title=Header Variables"`
 
-	// Blocklist is a list of tables and columns that should be disallowed in any and all queries.
+	// A list of tables and columns that should disallowed in any and all queries
 	Blocklist []string `jsonschema:"title=Block List"`
 
 	// The configs for custom resolvers. For example the `remote_api`
@@ -69,7 +69,7 @@ type Config struct {
 	// Log warnings and other debug information
 	Debug bool `jsonschema:"title=Debug,default=false"`
 
-	// LogVars logs SQL query variable values.
+	// Log SQL Query variable values
 	LogVars bool `mapstructure:"log_vars" json:"log_vars" yaml:"log_vars" jsonschema:"title=Log Variables,default=false"`
 
 	// Database polling duration (in seconds) used by subscriptions to
@@ -80,7 +80,7 @@ type Config struct {
 	// the query or the table role config.
 	DefaultLimit int `mapstructure:"default_limit" json:"default_limit" yaml:"default_limit" jsonschema:"title=Default Row Limit,default=20"`
 
-	// Disable all aggregation like count, length,  etc
+	// Disable all aggregation functions like count, sum, etc
 	DisableAgg bool `mapstructure:"disable_agg_functions" json:"disable_agg_functions" yaml:"disable_agg_functions" jsonschema:"title=Disable Aggregations,default=false"`
 
 	// Disable all functions like count, length,  etc
