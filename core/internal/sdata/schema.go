@@ -70,8 +70,8 @@ type DBRel struct {
 
 // Add at the top with other type definitions
 type Config struct {
-    AllowedSchemas []string // List of allowed schemas
-    DefaultSchema  string   // Default schema to use
+	AllowedSchemas []string // List of allowed schemas
+	DefaultSchema  string   // Default schema to use
 }
 
 // NewDBSchema creates a new database schema
@@ -457,12 +457,33 @@ func (s *DBSchema) DBName() string {
 
 // Add these methods to DBSchema struct
 func (s *DBSchema) DefaultSchema() string {
-    return s.defaultSchema
+	return s.defaultSchema
 }
 
 func (s *DBSchema) IsAllowedSchema(schema string) bool {
-    if s.allowedSchemas == nil {
-        return schema == s.defaultSchema
-    }
-    return s.allowedSchemas[schema]
+	if s.allowedSchemas == nil {
+		return schema == s.defaultSchema
+	}
+	return s.allowedSchemas[schema]
+}
+
+// ParseCrossSchemaTableName parses a table name in the format "tablenameofschemaname" and returns the table name and schema name separately.
+func (s *DBSchema) ParseCrossSchemaTableName(fullName string) (tableName, schemaName string) {
+	parts := strings.Split(fullName, "of")
+	if len(parts) == 2 {
+		return parts[0], parts[1]
+	}
+	return fullName, s.defaultSchema
+}
+
+// GetTableByFullName returns a table by its full name
+func (s *DBSchema) GetTableByFullName(fullName string) (DBTable, bool) {
+	tableName, schemaName := s.ParseCrossSchemaTableName(fullName)
+
+	for _, t := range s.tables {
+		if t.Name == tableName && t.Schema == schemaName {
+			return t, true
+		}
+	}
+	return DBTable{}, false
 }
