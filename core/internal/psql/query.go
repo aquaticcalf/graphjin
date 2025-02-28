@@ -52,6 +52,7 @@ type Compiler struct {
 	cv              int    // db version
 	pf              []byte // security prefix
 	enableCamelcase bool
+	schema string
 }
 
 func NewCompiler(conf Config) *Compiler {
@@ -61,6 +62,7 @@ func NewCompiler(conf Config) *Compiler {
 		cv:              conf.DBVersion,
 		pf:              conf.SecPrefix,
 		enableCamelcase: conf.EnableCamelcase,
+		schema:
 	}
 }
 
@@ -506,7 +508,11 @@ func (c *compilerContext) renderFrom(sel *qcode.Select) {
 		}
 
 	default:
-		c.table(sel.Ti.Schema, sel.Ti.Name, true)
+		if c.qc.SchemaDirective != "" {
+			c.table(c.qc.SchemaDirective, sel.Ti.Name, true)
+		} else {
+			c.table(sel.Ti.Schema, sel.Ti.Name, true)
+		}
 	}
 }
 

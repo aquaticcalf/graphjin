@@ -101,6 +101,9 @@ type Config struct {
 
 	// The filesystem to use for this instance of GraphJin
 	FS interface{} `mapstructure:"-" jsonschema:"-" json:"-"`
+
+	// Enable schema directive support
+	EnableSchemaDirective bool `mapstructure:"enable_schema_directive" json:"enable_schema_directive" yaml:"enable_schema_directive" jsonschema:"title=Enable Schema Directive,default=false"`
 }
 
 // Configuration for a database table
