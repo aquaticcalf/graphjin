@@ -216,46 +216,6 @@ func (gj *graphjinEngine) introQuery() (result json.RawMessage, err error) {
 		MutationType:     &ShortFullType{Name: "Mutation"},
 	}
 
-	// Define the PageInfo type for connections/pagination
-	pageInfoType := FullType{
-		Kind:        "OBJECT",
-		Name:        "PageInfo",
-		Description: "Information about pagination in a connection",
-		Fields: []FieldObject{
-			{
-				Name:        "hasNextPage",
-				Description: "Indicates if there are more pages after the current page",
-				Type:        newTypeRef("NON_NULL", "", newTypeRef("SCALAR", "Boolean", nil)),
-				Args:        []InputValue{},
-			},
-			{
-				Name:        "hasPreviousPage",
-				Description: "Indicates if there are pages before the current page",
-				Type:        newTypeRef("NON_NULL", "", newTypeRef("SCALAR", "Boolean", nil)),
-				Args:        []InputValue{},
-			},
-			{
-				Name:        "startCursor",
-				Description: "Cursor to the first edge in the current page",
-				Type:        newTypeRef("SCALAR", "String", nil),
-				Args:        []InputValue{},
-			},
-			{
-				Name:        "endCursor",
-				Description: "Cursor to the last edge in the current page",
-				Type:        newTypeRef("SCALAR", "String", nil),
-				Args:        []InputValue{},
-			},
-		},
-		Interfaces:    []TypeRef{},
-		InputFields:   []InputValue{},
-		EnumValues:    []EnumValue{},
-		PossibleTypes: []TypeRef{},
-	}
-
-	// Add PageInfo type to the schema
-	in.result.Schema.Types = append(in.result.Schema.Types, pageInfoType)
-
 	// Add the standard types
 	for _, v := range stdTypes {
 		in.addType(v)
@@ -1070,30 +1030,6 @@ func (in *Introspection) addCrossSchemaQueryFields() {
 				PossibleTypes: []TypeRef{},
 			})
 
-			// Add connection type
-			connectionTypeName := typeName + "Connection"
-			in.addFullType("OBJECT", connectionTypeName, fmt.Sprintf("A connection to %s", typeName))
-			in.result.Schema.Types = append(in.result.Schema.Types, FullType{
-				Kind: "OBJECT",
-				Name: connectionTypeName,
-				Fields: []FieldObject{
-					{
-						Name: "edges",
-						Type: newTypeRef("LIST", "", newTypeRef("OBJECT", edgeTypeName, nil)),
-						Args: []InputValue{},
-					},
-					{
-						Name: "pageInfo",
-						Type: newTypeRef("OBJECT", "PageInfo", nil),
-						Args: []InputValue{},
-					},
-				},
-				Interfaces:    []TypeRef{},
-				InputFields:   []InputValue{},
-				EnumValues:    []EnumValue{},
-				PossibleTypes: []TypeRef{},
-			})
-
 			// Add the query fields that reference these types
 			args := []InputValue{
 				{
@@ -1187,14 +1123,6 @@ func (in *Introspection) addCrossSchemaQueryFields() {
 						},
 					},
 					Type: newTypeRef("OBJECT", typeName, nil),
-				},
-
-				// Add connection type field
-				FieldObject{
-					Name:        crossSchemaName + "_connection",
-					Description: fmt.Sprintf("Paginated connection for %s schema's %s table", table.Schema, table.Name),
-					Args:        args,
-					Type:        newTypeRef("OBJECT", typeName+"Connection", nil),
 				},
 			)
 

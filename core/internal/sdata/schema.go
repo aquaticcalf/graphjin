@@ -31,8 +31,9 @@ type DBSchema struct {
 	edgesIndex        map[string][]edgeInfo   // edges index
 	allEdges          map[int32]TEdge         // all edges
 	relationshipGraph *util.Graph             // relationship graph
-	allowedSchemas    map[string]bool         // track allowed schemas
+	allowedSchemas    []string                // allowed schemas
 	defaultSchema     string                  // default schema
+	enableCamelCase   bool                    // enable camel case for cross schema names
 }
 
 type RelType int
@@ -70,8 +71,9 @@ type DBRel struct {
 
 // Add at the top with other type definitions
 type Config struct {
-	AllowedSchemas []string // List of allowed schemas
-	DefaultSchema  string   // Default schema to use
+	AllowedSchemas  []string // List of allowed schemas
+	DefaultSchema   string   // Default schema to use
+	EnableCamelCase bool     // Enable camel case for cross schema names
 }
 
 // NewDBSchema creates a new database schema
@@ -92,16 +94,15 @@ func NewDBSchema(
 		edgesIndex:        make(map[string][]edgeInfo),
 		allEdges:          make(map[int32]TEdge),
 		relationshipGraph: util.NewGraph(),
-		allowedSchemas:    make(map[string]bool),
+		allowedSchemas:    config.AllowedSchemas,
 		defaultSchema:     config.DefaultSchema,
+		enableCamelCase:   config.EnableCamelCase,
 	}
 
-	for _, s := range config.AllowedSchemas {
-		schema.allowedSchemas[s] = true
+	// make sure default schema is in the allowed schemas
+	if schema.defaultSchema != "" {
+		schema.allowedSchemas = append(schema.allowedSchemas, schema.defaultSchema)
 	}
-
-	// Always allow default schema
-	schema.allowedSchemas[config.DefaultSchema] = true
 
 	for _, t := range info.Tables {
 		nid := schema.addNode(t)
@@ -199,7 +200,7 @@ func (s *DBSchema) addPolymorphicRel(t DBTable) error {
 
 	// pc, err := pt.GetColumn(t.PrimaryCol.FKeyCol)
 	// if err != nil {
-	// 	return err
+	//      return err
 	// }
 
 	pc, err := pt.GetColumn(t.SecondaryCol.Name)
@@ -455,22 +456,45 @@ func (s *DBSchema) DBName() string {
 	return s.name
 }
 
-// Add these methods to DBSchema struct
+// DefaultSchema returns the default schema
 func (s *DBSchema) DefaultSchema() string {
 	return s.defaultSchema
 }
 
+// IsAllowedSchema checks if a schema is allowed
 func (s *DBSchema) IsAllowedSchema(schema string) bool {
-	if s.allowedSchemas == nil {
+	if len(s.allowedSchemas) == 0 {
 		return schema == s.defaultSchema
 	}
-	return s.allowedSchemas[schema]
+
+	for _, allowed := range s.allowedSchemas {
+		if allowed == schema {
+			return true
+		}
+	}
+
+	return false
+}
+
+// GetCrossSchemaSeparator returns the separator for cross schema table names
+func (s *DBSchema) GetCrossSchemaSeparator() string {
+	var sep string
+	sep = "of"
+	if s.enableCamelCase {
+		return strings.ToTitle(sep) // "Of"
+	}
+	return sep
 }
 
 // ParseCrossSchemaTableName parses a table name in the format "tablenameofschemaname" and returns the table name and schema name separately.
 func (s *DBSchema) ParseCrossSchemaTableName(fullName string) (tableName, schemaName string) {
-	parts := strings.Split(fullName, "of")
+	separator := s.GetCrossSchemaSeparator()
+	parts := strings.Split(fullName, separator)
+
 	if len(parts) == 2 {
+		if s.enableCamelCase {
+			parts[0] = strings.ToLower(parts[0])
+		}
 		return parts[0], parts[1]
 	}
 	return fullName, s.defaultSchema
@@ -487,3 +511,4 @@ func (s *DBSchema) GetTableByFullName(fullName string) (DBTable, bool) {
 	}
 	return DBTable{}, false
 }
+
