@@ -165,13 +165,15 @@ func (s *DBSchema) addRels(t DBTable) error {
 		err = s.addPolymorphicRel(t)
 	case "remote":
 		err = s.addRemoteRel(t)
+	default:
+		err = s.addColumnRels(t)
 	}
 
 	if err != nil {
 		return err
 	}
 
-	return s.addColumnRels(t)
+	return nil
 }
 
 // addJsonRel adds a json relationship to the schema
