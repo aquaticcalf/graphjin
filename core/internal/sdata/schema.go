@@ -1,5 +1,3 @@
-//go:generate stringer -type=RelType -output=./gen_string.go
-
 package sdata
 
 import (
@@ -511,4 +509,3 @@ func (s *DBSchema) GetTableByFullName(fullName string) (DBTable, bool) {
 	}
 	return DBTable{}, false
 }
-

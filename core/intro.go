@@ -1196,3 +1196,11 @@ func (in *Introspection) addCrossSchemaQueryFields() {
 		}
 	}
 }
+
+// getForeignKeyType determines the type of foreign key fields
+func getForeignKeyType(col sdata.DBColumn) string {
+	if col.FKeyTable != "" {
+		return "Int"
+	}
+	return getTypeFromColumn(col)
+}

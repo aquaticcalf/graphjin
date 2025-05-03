@@ -1,4 +1,3 @@
-//go:generate stringer -linecomment -type=QType,MType,SelType,FieldType,SkipType,PagingType,AggregrateOp,ValType,ExpOp -output=./gen_string.go
 package qcode
 
 import (
@@ -604,7 +603,7 @@ func (co *Compiler) addRelInfo(
 		}
 		sel.Rel = sdata.PathToRel(path[0])
 
-		// for _, p := range path {
+		// for _, p := range path[0:] {
 		// 	rel := sdata.PathToRel(p)
 		// 	fmt.Println(childF.Name, parentF.Name,
 		// 		"--->>>", rel.Left.Col.Table, rel.Left.Col.Name,
