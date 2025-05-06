@@ -7,7 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	jwt "github.com/golang-jwt/jwt"
 	"github.com/lestrrat-go/jwx/jwk"
 )

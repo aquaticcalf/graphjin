@@ -11,4 +11,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-To report vulnerabilities please email or DM (https://twitter.com/dosco)
+To report vulnerabilities please email or DM (https://twitter.com/aquaticcalf)

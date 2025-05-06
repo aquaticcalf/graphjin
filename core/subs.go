@@ -15,9 +15,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/dosco/graphjin/core/v3/internal/allow"
-	"github.com/dosco/graphjin/core/v3/internal/graph"
-	"github.com/dosco/graphjin/core/v3/internal/qcode"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/allow"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/graph"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/qcode"
 )
 
 const (

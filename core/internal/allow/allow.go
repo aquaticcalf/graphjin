@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dosco/graphjin/core/v3/internal/graph"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/graph"
 	lru "github.com/hashicorp/golang-lru"
 )
 

@@ -9,8 +9,8 @@
 		"net/http"
 		"path/filepath"
 		"github.com/go-chi/chi"
-		"github.com/dosco/graphjin/serv/v3"
-		"github.com/dosco/graphjin/auth/v3"
+		"github.com/aquaticcalf/graphjin/serv/v3"
+		"github.com/aquaticcalf/graphjin/auth/v3"
 	)
 
 	func main() {
@@ -40,12 +40,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/dosco/graphjin/auth/v3/provider"
+	"github.com/aquaticcalf/graphjin/auth/v3/provider"
 )
 
 type JWTConfig = provider.JWTConfig

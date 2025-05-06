@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/dosco/graphjin/auth/v3"
+	"github.com/aquaticcalf/graphjin/auth/v3"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -13,7 +13,7 @@ override GOPATH = $(HOME)/go
 endif
 
 # Build-time Go variables
-BUILD_FLAGS ?= -ldflags '-s -w -X "main.version=${BUILD_VERSION}" -X "main.commit=${BUILD}" -X "main.date=${BUILD_DATE}" -X "github.com/dosco/graphjin/serv/v3.version=${BUILD_VERSION}"'
+BUILD_FLAGS ?= -ldflags '-s -w -X "main.version=${BUILD_VERSION}" -X "main.commit=${BUILD}" -X "main.date=${BUILD_DATE}" -X "github.com/aquaticcalf/graphjin/serv/v3.version=${BUILD_VERSION}"'
 
 .PHONY: all download-tools build wasm-build gen clean tidy test test-norace run run-github-actions lint changlog release version help $(PLATFORMS)
 

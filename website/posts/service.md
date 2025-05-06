@@ -14,12 +14,12 @@ It is very fast, secure and has a ton of API best practices built in like `Rate 
 
 ### Trying out the example
 
-For this example we will create a [example e-commerce store](https://github.com/dosco/graphjin/tree/master/examples/webshop). This example app can be found in repo.
+For this example we will create a [example e-commerce store](https://github.com/aquaticcalf/graphjin/tree/master/examples/webshop). This example app can be found in repo.
 
 Below we explain how this example app was built and other details around useing GraphJin to make you more productive.
 
 ```shell
-git clone https://github.com/dosco/graphjin.git
+git clone https://github.com/aquaticcalf/graphjin.git
 cd graphjin/examples/webshop
 docker compose run api db setup
 docker compose up
@@ -31,13 +31,13 @@ docker compose up
 
 ```shell
 # Mac (Homebrew)
-brew install dosco/graphjin/graphjin
+brew install aquaticcalf/graphjin/graphjin
 
 # Ubuntu (Snap)
 sudo snap install --classic graphjin
 ```
 
-Debian and Redhat ([releases](https://github.com/dosco/graphjin/releases)) download the .deb or .rpm from the releases page and install with dpkg -i and rpm -i respectively.
+Debian and Redhat ([releases](https://github.com/aquaticcalf/graphjin/releases)) download the .deb or .rpm from the releases page and install with dpkg -i and rpm -i respectively.
 
 #### 2. Create a new API
 

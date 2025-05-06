@@ -51,7 +51,7 @@ export default function Home({ posts }) {
         </p>
 
         <div className="flex gap-2 items-center">
-          <a href="https://github.com/dosco/graphjin" target="_blank">
+          <a href="https://github.com/aquaticcalf/graphjin" target="_blank">
             <FaGithub size={50} className="mr-2" />
           </a>
           <div

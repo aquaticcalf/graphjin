@@ -5,9 +5,9 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/dosco/graphjin/core/v3/internal/allow"
-	"github.com/dosco/graphjin/core/v3/internal/qcode"
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/allow"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/qcode"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
 )
 
 // Initializes the graphjin instance with the config

@@ -5,7 +5,7 @@ import (
 	"hash/fnv"
 	"strings"
 
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
 )
 
 func MigrateSchema(current, expected sdata.DBInfo) []string {

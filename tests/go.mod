@@ -1,12 +1,12 @@
-module github.com/dosco/graphjin/tests/v3
+module github.com/aquaticcalf/graphjin/tests/v3
 
 go 1.21
 
 toolchain go1.23.1
 
 require (
-	github.com/dosco/graphjin/conf/v3 v3.0.38
-	github.com/dosco/graphjin/core/v3 v3.0.38
+	github.com/aquaticcalf/graphjin/conf/v3 v3.0.38
+	github.com/aquaticcalf/graphjin/core/v3 v3.0.38
 	github.com/orlangure/gnomock v0.30.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sync v0.8.0

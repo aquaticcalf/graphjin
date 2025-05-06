@@ -7,7 +7,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/dosco/graphjin/core/v3/internal/assert"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/assert"
 )
 
 func TestCryptEncryptDecrypt(t *testing.T) {

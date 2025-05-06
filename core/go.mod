@@ -1,4 +1,4 @@
-module github.com/dosco/graphjin/core/v3
+module github.com/aquaticcalf/graphjin/core/v3
 
 go 1.18
 

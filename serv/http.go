@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dosco/graphjin/auth/v3"
-	"github.com/dosco/graphjin/core/v3"
-	"github.com/dosco/graphjin/serv/v3/internal/etags"
+	"github.com/aquaticcalf/graphjin/auth/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3/internal/etags"
 	"github.com/gorilla/websocket"
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/rs/cors"

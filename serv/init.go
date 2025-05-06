@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 )
 
 // initLogLevel initializes the log level

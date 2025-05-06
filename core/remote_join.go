@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/dosco/graphjin/core/v3/internal/jsn"
-	"github.com/dosco/graphjin/core/v3/internal/qcode"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/jsn"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/qcode"
 )
 
 // execRemoteJoin fetches remote data for the marked insertion points

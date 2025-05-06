@@ -3,7 +3,7 @@ package qcode
 import (
 	"fmt"
 
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
 )
 
 func graphError(err error, from, to, through string) error {

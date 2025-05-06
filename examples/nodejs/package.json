@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "description": "Example app for using Graphjin with an NodeJS Express app",
-  "author": "Vikram <twitter.com/dosco>",
+  "author": "Vikram <twitter.com/aquaticcalf>",
   "license": "Apache-2.0",
   "scripts": {},
   "dependencies": {

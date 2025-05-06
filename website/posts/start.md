@@ -214,7 +214,7 @@ import (
   "fmt"
   "log"
 
-  "github.com/dosco/graphjin/core"
+  "github.com/aquaticcalf/graphjin/core"
   "github.com/go-chi/chi/v5"
     _ "github.com/jackc/pgx/v5/stdlib"
 )

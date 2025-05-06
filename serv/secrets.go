@@ -1,7 +1,7 @@
 package serv
 
 import (
-	"github.com/dosco/graphjin/serv/v3/internal/secrets"
+	"github.com/aquaticcalf/graphjin/serv/v3/internal/secrets"
 	"github.com/spf13/afero"
 	"go.uber.org/zap"
 )

@@ -3,9 +3,9 @@ package qcode
 import (
 	"fmt"
 
-	"github.com/dosco/graphjin/core/v3/internal/graph"
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
-	"github.com/dosco/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/graph"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
 )
 
 func (co *Compiler) compileArgOrderByObj(sel *Select, parent *graph.Node, cm map[string]struct{}) error {

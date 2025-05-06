@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/dosco/graphjin/core/v3/internal/graph"
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
-	"github.com/dosco/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/graph"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
 )
 
 type aexpst struct {

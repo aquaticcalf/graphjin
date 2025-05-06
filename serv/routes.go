@@ -3,7 +3,7 @@ package serv
 import (
 	"net/http"
 
-	"github.com/dosco/graphjin/auth/v3"
+	"github.com/aquaticcalf/graphjin/auth/v3"
 )
 
 const (

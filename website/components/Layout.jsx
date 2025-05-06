@@ -5,7 +5,7 @@ import { FaTwitter, FaGithub } from "react-icons/fa";
 export const Layout = ({
   title = "GraphJin - Build APIs in 5 minutes",
   description = "Build APIs in 5 minutes not weeks",
-  twitter = "@dosco",
+  twitter = "@aquaticcalf",
   image = "",
   children,
 }) => {
@@ -31,10 +31,10 @@ export const Layout = ({
             </h1>
 
             <div className="flex gap-4">
-              <a href="https://twitter.com/dosco" target="_blank">
+              <a href="https://twitter.com/aquaticcalf" target="_blank">
                 <FaTwitter size={40} className="text-red-500" />
               </a>
-              <a href="https://github.com/dosco/graphjin" target="_blank">
+              <a href="https://github.com/aquaticcalf/graphjin" target="_blank">
                 <FaGithub size={40} className="text-red-500" />
               </a>
             </div>

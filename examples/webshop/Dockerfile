@@ -1,4 +1,4 @@
-FROM dosco/graphjin:latest
+FROM aquaticcalf/graphjin:latest
 WORKDIR /
 
 COPY config/ /config/

@@ -1,11 +1,11 @@
 # GraphJin, A New Kind of ORM
 
-[![Apache 2.0](https://img.shields.io/github/license/dosco/graphjin.svg?style=for-the-badge)](https://github.com/dosco/graphjin/blob/master/LICENSE)
+[![Apache 2.0](https://img.shields.io/github/license/aquaticcalf/graphjin.svg?style=for-the-badge)](https://github.com/aquaticcalf/graphjin/blob/master/LICENSE)
 [![NPM Package](https://img.shields.io/npm/v/graphjin?style=for-the-badge)](https://www.npmjs.com/package/graphjin)
-[![Docker Pulls](https://img.shields.io/docker/pulls/dosco/graphjin?style=for-the-badge)](https://hub.docker.com/r/dosco/graphjin/builds)
+[![Docker Pulls](https://img.shields.io/docker/pulls/aquaticcalf/graphjin?style=for-the-badge)](https://hub.docker.com/r/aquaticcalf/graphjin/builds)
 [![Discord Chat](https://img.shields.io/discord/628796009539043348.svg?style=for-the-badge&logo=discord)](https://discord.gg/6pSWCTZ)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge&logo=go)](https://pkg.go.dev/github.com/dosco/graphjin/core/v3)
-[![GoReport](https://goreportcard.com/badge/github.com/gojp/goreportcard?style=for-the-badge)](https://goreportcard.com/report/github.com/dosco/graphjin/core/v3)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge&logo=go)](https://pkg.go.dev/github.com/aquaticcalf/graphjin/core/v3)
+[![GoReport](https://goreportcard.com/badge/github.com/gojp/goreportcard?style=for-the-badge)](https://goreportcard.com/report/github.com/aquaticcalf/graphjin/core/v3)
 
 ## Build APIs in 5 minutes not weeks
 
@@ -81,11 +81,11 @@ Detailed docs on GraphQL syntax, usecases, JS and GO code examples and it's acti
 
 ## [![Docs](https://img.shields.io/badge/Docs-graphjin.com-red?style=for-the-badge)](https://graphjin.com)
 
-## [![Example Code](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge&logo=go&label=Example+Code)](https://pkg.go.dev/github.com/dosco/graphjin/tests/v3)
+## [![Example Code](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=for-the-badge&logo=go&label=Example+Code)](https://pkg.go.dev/github.com/aquaticcalf/graphjin/tests/v3)
 
 ## Use with NodeJS
 
-GraphJin allows you to use GraphQL and the full power of GraphJin to access to create instant APIs without writing and maintaining lines and lines of database code. GraphJin NodeJS currently only supports Postgres compatible databases working on adding MySQL support as well. Example app in [/examples/nodejs](https://github.com/dosco/graphjin/tree/master/examples/nodejs)
+GraphJin allows you to use GraphQL and the full power of GraphJin to access to create instant APIs without writing and maintaining lines and lines of database code. GraphJin NodeJS currently only supports Postgres compatible databases working on adding MySQL support as well. Example app in [/examples/nodejs](https://github.com/aquaticcalf/graphjin/tree/master/examples/nodejs)
 
 ```console
 npm install graphjin
@@ -144,12 +144,12 @@ console.log("Express server started on port %s", server.address().port);
 
 ## Use with GO
 
-You can use GraphJin as a library within your own code. The [serv](https://pkg.go.dev/github.com/dosco/graphjin/serv/v3) package exposes the entirely GraphJin standlone service as a library while the [core](https://pkg.go.dev/github.com/dosco/graphjin/core/v3) package exposes just the GraphJin compiler. The [Go docs](https://pkg.go.dev/github.com/dosco/graphjin/tests/v3#pkg-examples) are filled with examples on how to use GraphJin within your own apps as a sort of alternative to using ORM packages. GraphJin allows you to use GraphQL and the full power of GraphJin to access your data instead of a limiting ORM.
+You can use GraphJin as a library within your own code. The [serv](https://pkg.go.dev/github.com/aquaticcalf/graphjin/serv/v3) package exposes the entirely GraphJin standlone service as a library while the [core](https://pkg.go.dev/github.com/aquaticcalf/graphjin/core/v3) package exposes just the GraphJin compiler. The [Go docs](https://pkg.go.dev/github.com/aquaticcalf/graphjin/tests/v3#pkg-examples) are filled with examples on how to use GraphJin within your own apps as a sort of alternative to using ORM packages. GraphJin allows you to use GraphQL and the full power of GraphJin to access your data instead of a limiting ORM.
 
 ### Use GraphJin Core
 
 ```console
-go get github.com/dosco/graphjin/core/v3
+go get github.com/aquaticcalf/graphjin/core/v3
 ```
 
 ```golang
@@ -161,7 +161,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/dosco/graphjin/core"
+	"github.com/aquaticcalf/graphjin/core"
 	"github.com/go-chi/chi/v5"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
@@ -208,7 +208,7 @@ func main() {
 
 ```golang
 import (
-  "github.com/dosco/graphjin/serv/v2"
+  "github.com/aquaticcalf/graphjin/serv/v2"
 )
 
 gj, err := serv.NewGraphJinService(conf, opt...)
@@ -231,13 +231,13 @@ if err := gj.Start(); err != nil {
 
 ```
 # Mac (Homebrew)
-brew install dosco/graphjin/graphjin
+brew install aquaticcalf/graphjin/graphjin
 
 # Ubuntu (Snap)
 sudo snap install --classic graphjin
 ```
 
-Debian and Redhat ([releases](https://github.com/dosco/graphjin/releases))
+Debian and Redhat ([releases](https://github.com/aquaticcalf/graphjin/releases))
 Download the .deb or .rpm from the releases page and install with dpkg -i and rpm -i respectively.
 
 ### Quickly create and deploy new apps
@@ -345,13 +345,13 @@ With GraphJin your web and mobile developers can start building instantly. All t
 
 [Documentation](https://graphjin.com)
 
-[GraphJin GO Examples](https://pkg.go.dev/github.com/dosco/graphjin/core#pkg-examples)
+[GraphJin GO Examples](https://pkg.go.dev/github.com/aquaticcalf/graphjin/core#pkg-examples)
 
 ## Reach out
 
 We're happy to help you leverage GraphJin reach out if you have questions
 
-[twitter/dosco](https://twitter.com/dosco)
+[twitter/aquaticcalf](https://twitter.com/aquaticcalf)
 
 [discord/graphjin](https://discord.gg/6pSWCTZ) (Chat)
 

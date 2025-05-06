@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/dosco/graphjin/core/v3/internal/psql"
-	"github.com/dosco/graphjin/core/v3/internal/qcode"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/psql"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/qcode"
 )
 
 type gstate struct {

@@ -3,8 +3,8 @@ package qcode
 import (
 	"bytes"
 
-	"github.com/dosco/graphjin/core/v3/internal/graph"
-	"github.com/dosco/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/graph"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
 )
 
 func (co *Compiler) ParseName(name string) string {

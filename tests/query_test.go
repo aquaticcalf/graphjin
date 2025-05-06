@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 )
 
 func Example_query() {

@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/dosco/graphjin/serv/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3"
 	"github.com/invopop/jsonschema"
 )
 
 func main() {
 	r := new(jsonschema.Reflector)
-	if err := r.AddGoComments("github.com/dosco/graphjin", "./core"); err != nil {
+	if err := r.AddGoComments("github.com/aquaticcalf/graphjin", "./core"); err != nil {
 		panic(err)
 	}
-	if err := r.AddGoComments("github.com/dosco/graphjin", "./serv"); err != nil {
+	if err := r.AddGoComments("github.com/aquaticcalf/graphjin", "./serv"); err != nil {
 		panic(err)
 	}
-	if err := r.AddGoComments("github.com/dosco/graphjin", "./serv/auth"); err != nil {
+	if err := r.AddGoComments("github.com/aquaticcalf/graphjin", "./serv/auth"); err != nil {
 		panic(err)
 	}
 

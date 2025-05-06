@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/dosco/graphjin/serv/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3"
 	"github.com/spf13/cobra"
 )
 

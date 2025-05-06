@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dosco/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
 )
 
 type edgeInfo struct {

@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	"github.com/orlangure/gnomock"
 	"github.com/orlangure/gnomock/preset/cockroachdb"
 	"github.com/orlangure/gnomock/preset/mssql"

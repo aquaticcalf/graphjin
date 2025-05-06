@@ -6,7 +6,7 @@ package jsn_test
 import (
 	"testing"
 
-	"github.com/dosco/graphjin/core/v3/internal/jsn"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/jsn"
 )
 
 var ret int

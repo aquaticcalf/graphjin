@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/dosco/graphjin/serv/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3"
 	"github.com/go-chi/chi/v5"
 )
 

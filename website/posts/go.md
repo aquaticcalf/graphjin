@@ -17,7 +17,7 @@ import (
   "fmt"
   "log"
 
-  "github.com/dosco/graphjin/core/v2"
+  "github.com/aquaticcalf/graphjin/core/v2"
   _ "github.com/jackc/pgx/v4/stdlib"
 )
 
@@ -57,7 +57,7 @@ func main() {
 Add Graphjin to your GO application.
 
 ```shell
-go get github.com/dosco/graphjin/core/v3
+go get github.com/aquaticcalf/graphjin/core/v3
 ```
 
 <mark>
@@ -77,7 +77,7 @@ config := core.Config{ Production: true, DefaultLimit: 50 }
 ### Using GraphJin
 
 ```go
-import "github.com/dosco/graphjin/core/v3"
+import "github.com/aquaticcalf/graphjin/core/v3"
 
 // config can be read in from a file
 config, err := NewConfig("./config", "dev.yml")
@@ -271,7 +271,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/dosco/graphjin/serv/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3"
 	"github.com/go-chi/chi/v5"
 )
 

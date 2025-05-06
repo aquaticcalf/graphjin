@@ -192,6 +192,6 @@ res.data(function (res1) {
 
 ### Code examples
 
-1. [node prostgres.js](https://github.com/dosco/graphjin/blob/master/examples/nodejs/postgres.js)
+1. [node prostgres.js](https://github.com/aquaticcalf/graphjin/blob/master/examples/nodejs/postgres.js)
 
-2. [node mysql.js](https://github.com/dosco/graphjin/blob/master/examples/nodejs/mysql.js)
+2. [node mysql.js](https://github.com/aquaticcalf/graphjin/blob/master/examples/nodejs/mysql.js)

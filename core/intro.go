@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
-	"github.com/dosco/graphjin/core/v3/internal/util"
-	"github.com/dosco/graphjin/core/v3/internal/valid"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/valid"
 )
 
 const (

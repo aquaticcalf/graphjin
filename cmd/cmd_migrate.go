@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dosco/graphjin/cmd/v3/internal/migrate"
-	"github.com/dosco/graphjin/serv/v3"
+	"github.com/aquaticcalf/graphjin/cmd/v3/internal/migrate"
+	"github.com/aquaticcalf/graphjin/serv/v3"
 	"github.com/spf13/cobra"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"

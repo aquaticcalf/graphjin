@@ -15,7 +15,7 @@ func main() {
 	}
 
 	newVersion := os.Args[1]
-	versionRegex := regexp.MustCompile(`(github.com\/dosco\/graphjin\/[^\s]+) v[0-9]+\.[0-9]+\.[0-9]+`)
+	versionRegex := regexp.MustCompile(`(github.com\/aquaticcalf\/graphjin\/[^\s]+) v[0-9]+\.[0-9]+\.[0-9]+`)
 	replaceFormat := "$1 v" + newVersion
 
 	err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {

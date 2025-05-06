@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	core "github.com/dosco/graphjin/core/v3"
+	core "github.com/aquaticcalf/graphjin/core/v3"
 	jwt "github.com/golang-jwt/jwt"
 )
 

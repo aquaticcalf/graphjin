@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dosco/graphjin/auth/v3"
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/auth/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

@@ -8,8 +8,8 @@ import (
 	"errors"
 	"syscall/js"
 
-	"github.com/dosco/graphjin/conf/v3"
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/conf/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 )
 
 func main() {

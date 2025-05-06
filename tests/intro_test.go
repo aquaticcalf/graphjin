@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	"github.com/stretchr/testify/assert"
 )
 

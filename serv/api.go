@@ -9,7 +9,7 @@
 		"database/sql"
 		"fmt"
 		"time"
-		"github.com/dosco/graphjin/core/v3"
+		"github.com/aquaticcalf/graphjin/core/v3"
 		_ "github.com/jackc/pgx/v5/stdlib"
 	)
 
@@ -44,10 +44,10 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/dosco/graphjin/auth/v3"
-	"github.com/dosco/graphjin/core/v3"
-	otelPlugin "github.com/dosco/graphjin/plugin/otel/v3"
-	"github.com/dosco/graphjin/serv/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/auth/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
+	otelPlugin "github.com/aquaticcalf/graphjin/plugin/otel/v3"
+	"github.com/aquaticcalf/graphjin/serv/v3/internal/util"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"

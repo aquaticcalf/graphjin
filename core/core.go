@@ -9,12 +9,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dosco/graphjin/core/v3/internal/allow"
-	"github.com/dosco/graphjin/core/v3/internal/jsn"
-	"github.com/dosco/graphjin/core/v3/internal/psql"
-	"github.com/dosco/graphjin/core/v3/internal/qcode"
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
-	"github.com/dosco/graphjin/core/v3/internal/valid"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/allow"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/jsn"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/psql"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/qcode"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/valid"
 )
 
 var (

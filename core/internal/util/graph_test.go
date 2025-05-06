@@ -3,8 +3,8 @@ package util_test
 import (
 	"testing"
 
-	"github.com/dosco/graphjin/core/v3/internal/assert"
-	"github.com/dosco/graphjin/core/v3/internal/util"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/assert"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/util"
 )
 
 // nolint:errcheck

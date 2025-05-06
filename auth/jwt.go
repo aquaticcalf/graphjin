@@ -7,7 +7,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt"
 
-	"github.com/dosco/graphjin/auth/v3/provider"
+	"github.com/aquaticcalf/graphjin/auth/v3/provider"
 )
 
 const (

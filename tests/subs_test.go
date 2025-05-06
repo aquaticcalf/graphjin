@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dosco/graphjin/core/v3"
+	"github.com/aquaticcalf/graphjin/core/v3"
 	"golang.org/x/sync/errgroup"
 )
 

@@ -3,7 +3,7 @@ package core
 import (
 	"time"
 
-	"github.com/dosco/graphjin/core/v3/internal/sdata"
+	"github.com/aquaticcalf/graphjin/core/v3/internal/sdata"
 )
 
 // initDBWatcher initializes the database schema watcher

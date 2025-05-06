@@ -18,7 +18,7 @@ builds:
       - -X main.version={{ .Version }}
       - -X main.commit={{ .Commit }}
       - -X main.date={{ .Date }}
-      - -X github.com/dosco/graphjin/serv/v3.version={{ .Version }}
+      - -X github.com/aquaticcalf/graphjin/serv/v3.version={{ .Version }}
     env:
       - CGO_ENABLED=0
     goos:
@@ -66,14 +66,14 @@ nfpms:
   - homepage: https://graphjin.com
     description: "Build APIs in 5 minutes. An automagical GraphQL to SQL compiler."
     license: Apache-2.0
-    maintainer: Vikram Rangnekar (https://twitter.com/dosco)
+    maintainer: Vikram Rangnekar (https://twitter.com/aquaticcalf)
     formats:
       - deb
       - rpm
 
 brews:
   - repository:
-      owner: dosco
+      owner: aquaticcalf
       name: homebrew-graphjin
     directory: Formula
     homepage: https://graphjin.com
@@ -83,7 +83,7 @@ brews:
 
 scoops:
   - repository:
-      owner: dosco
+      owner: aquaticcalf
       name: graphjin-scoop
     commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
     homepage: https://graphjin.com
