@@ -4,6 +4,8 @@ go 1.21
 
 toolchain go1.23.1
 
+replace github.com/aquaticcalf/graphjin/core/v3 => ../../core
+
 require (
 	github.com/aquaticcalf/graphjin/core/v3 v3.0.38
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.42.0

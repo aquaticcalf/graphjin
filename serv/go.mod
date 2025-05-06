@@ -4,6 +4,12 @@ go 1.21
 
 toolchain go1.23.1
 
+replace (
+	github.com/aquaticcalf/graphjin/auth/v3 => ../auth
+	github.com/aquaticcalf/graphjin/core/v3 => ../core
+	github.com/aquaticcalf/graphjin/plugin/otel/v3 => ../plugin/otel
+)
+
 require (
 	github.com/aquaticcalf/graphjin/auth/v3 v3.0.38
 	github.com/aquaticcalf/graphjin/core/v3 v3.0.38
