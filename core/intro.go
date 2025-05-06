@@ -374,6 +374,21 @@ func (in *Introspection) addTableTypeWithDepth(
 		Interfaces:  []TypeRef{},
 	}
 
+	// detect which column‐names are FKs, so we can skip generating their plain scalar fields and only emit the nested relation
+	relCols := map[string]bool{}
+	fwd, err := in.schema.GetFirstDegree(table)
+	if err != nil {
+		return
+	}
+	for _, rn := range fwd {
+		// ignore remote / polymorphic / embedded rels
+		if rn.Type == sdata.RelRemote || rn.Type == sdata.RelPolymorphic || rn.Type == sdata.RelEmbedded {
+			continue
+		}
+		// use the field name as it will appear in graphql
+		relCols[in.getName(rn.Name)] = true
+	}
+
 	name := table.Name
 	if alias != "" {
 		name = alias
@@ -399,12 +414,12 @@ func (in *Introspection) addTableTypeWithDepth(
 		if c.Blocked {
 			continue
 		}
-		if c.FullText {
-			hasSearch = true
+
+		// skip the raw FK scalar, only expose the nested object
+		if relCols[in.getName(c.Name)] {
+			continue
 		}
-		if c.FKRecursive {
-			hasRecursive = true
-		}
+
 		var f1 FieldObject
 		f1, err = in.getColumnField(c)
 		if err != nil {
@@ -638,13 +653,30 @@ func (in *Introspection) addInputType(table sdata.DBTable, ft FullType) (retFT F
 
 	// update
 	ty.Name = ("update" + table.Name + SUFFIX_INPUT)
+
+	// skip parent-FK rels
+	relCols := map[string]bool{}
+	allR, err := in.schema.GetFirstDegree(table)
+	if err == nil {
+		for _, rn := range allR {
+			if rn.Type == sdata.RelRemote || rn.Type == sdata.RelPolymorphic || rn.Type == sdata.RelEmbedded {
+				continue
+			}
+			relCols[in.getName(rn.Name)] = true
+		}
+	}
+
 	i := 0
 	for _, relNode := range allNodes {
 		t1 := relNode.Table
+
+		// skip remote / polymorphic / embedded and the parent-FK fields
 		if relNode.Type == sdata.RelRemote ||
 			relNode.Type == sdata.RelPolymorphic ||
-			relNode.Type == sdata.RelEmbedded {
+			relNode.Type == sdata.RelEmbedded ||
+			relCols[in.getName(relNode.Name)] {
 			continue
+
 		}
 		ty.InputFields[(fieldLen + i)] = InputValue{
 			Name:        in.getName(t1.Name),
