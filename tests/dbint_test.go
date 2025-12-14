@@ -1,13 +1,16 @@
 package tests_test
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/dosco/graphjin/core/v3"
 	"github.com/orlangure/gnomock"
@@ -15,6 +18,8 @@ import (
 	"github.com/orlangure/gnomock/preset/mssql"
 	"github.com/orlangure/gnomock/preset/mysql"
 	"github.com/orlangure/gnomock/preset/postgres"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type dbinfo struct {
@@ -23,6 +28,7 @@ type dbinfo struct {
 	connstr string
 	disable bool
 	preset  gnomock.Preset
+	startFn func(context.Context) (func(context.Context) error, string, error)
 }
 
 var (
@@ -67,7 +73,6 @@ func TestMain(m *testing.M) {
 			),
 		},
 		{
-			disable: true,
 			name:    "mysql",
 			driver:  "mysql",
 			connstr: "user:user@tcp(%s)/db",
@@ -91,6 +96,35 @@ func TestMain(m *testing.M) {
 				mssql.WithQueriesFile("./mssql.sql"),
 			),
 		},
+		{
+			name:    "sqlite",
+			driver:  "sqlite3",
+			connstr: "",
+			startFn: func(ctx context.Context) (func(context.Context) error, string, error) {
+				// Use a shared in-memory DB
+				connStr := "file:memdb1?mode=memory&cache=shared"
+
+				sdb, err := sql.Open("sqlite3", connStr)
+				if err != nil {
+					return nil, "", err
+				}
+
+				script, err := os.ReadFile("./sqlite.sql")
+				if err != nil {
+					sdb.Close()
+					return nil, "", err
+				}
+
+				if _, err := sdb.Exec(string(script)); err != nil {
+					sdb.Close()
+					return nil, "", fmt.Errorf("failed to init sqlite: %w", err)
+				}
+				sdb.Close()
+
+				cleanup := func(context.Context) error { return nil }
+				return cleanup, connStr, nil
+			},
+		},
 	}
 
 	for _, v := range dbinfoList {
@@ -108,16 +142,32 @@ func TestMain(m *testing.M) {
 			continue
 		}
 
-		con, err := gnomock.Start(
-			v.preset,
-			gnomock.WithLogWriter(os.Stdout))
+		var con *gnomock.Container
+		var err error
+		var connStr string
+
+		if v.startFn != nil {
+			var cleanup func(context.Context) error
+			cleanup, connStr, err = v.startFn(context.Background())
+			_ = cleanup
+		} else {
+			con, err = gnomock.Start(
+				v.preset,
+				gnomock.WithLogWriter(os.Stdout))
+			if err == nil {
+				connStr = fmt.Sprintf(v.connstr, con.DefaultAddress())
+			}
+		}
+
 		if err != nil {
 			panic(err)
 		}
 
-		db, err = sql.Open(v.driver, fmt.Sprintf(v.connstr, con.DefaultAddress()))
+		db, err = sql.Open(v.driver, connStr)
 		if err != nil {
-			_ = gnomock.Stop(con)
+			if con != nil {
+				_ = gnomock.Stop(con)
+			}
 			panic(err)
 		}
 		db.SetMaxIdleConns(300)
@@ -125,9 +175,12 @@ func TestMain(m *testing.M) {
 		dbType = v.name
 
 		res := m.Run()
-		_ = gnomock.Stop(con)
+		if con != nil {
+			_ = gnomock.Stop(con)
+		}
 		os.Exit(res)
 	}
+	os.Exit(0)
 }
 
 func newConfig(c *core.Config) *core.Config {
