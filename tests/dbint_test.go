@@ -10,7 +10,6 @@ import (
 	"regexp"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/dosco/graphjin/core/v3"
 	"github.com/orlangure/gnomock"
@@ -19,7 +18,9 @@ import (
 	"github.com/orlangure/gnomock/preset/mysql"
 	"github.com/orlangure/gnomock/preset/postgres"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
+	"github.com/mattn/go-sqlite3"
 )
 
 type dbinfo struct {
@@ -38,6 +39,19 @@ var (
 )
 
 func init() {
+	sql.Register("sqlite3_regexp", &sqlite3.SQLiteDriver{
+		ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+			if err := conn.RegisterFunc("REGEXP", func(re, s string) (bool, error) {
+				return regexp.MatchString(re, s)
+			}, true); err != nil {
+				return err
+			}
+			return conn.RegisterFunc("regexp", func(re, s string) (bool, error) {
+				return regexp.MatchString(re, s)
+			}, true)
+		},
+	})
+
 	flag.StringVar(&dbParam, "db", "", "database type")
 }
 
@@ -98,13 +112,14 @@ func TestMain(m *testing.M) {
 		},
 		{
 			name:    "sqlite",
-			driver:  "sqlite3",
+			driver:  "sqlite3_regexp",
 			connstr: "",
 			startFn: func(ctx context.Context) (func(context.Context) error, string, error) {
-				// Use a shared in-memory DB
+				// Use shared in-memory DB
 				connStr := "file:memdb1?mode=memory&cache=shared"
 
-				sdb, err := sql.Open("sqlite3", connStr)
+				// Initialize DB
+				sdb, err := sql.Open("sqlite3_regexp", connStr)
 				if err != nil {
 					return nil, "", err
 				}
@@ -119,9 +134,9 @@ func TestMain(m *testing.M) {
 					sdb.Close()
 					return nil, "", fmt.Errorf("failed to init sqlite: %w", err)
 				}
-				sdb.Close()
 
-				cleanup := func(context.Context) error { return nil }
+				// Keep the DB open for the shared in-memory DB to persist
+				cleanup := func(context.Context) error { return sdb.Close() }
 				return cleanup, connStr, nil
 			},
 		},

@@ -295,6 +295,7 @@ const (
 	ValObj
 	ValVar
 	ValDBVar
+	ValSubQuery
 )
 
 type AggregrateOp int8
@@ -330,7 +331,7 @@ type Compiler struct {
 }
 
 func NewCompiler(s *sdata.DBSchema, c Config) (*Compiler, error) {
-	if c.DBSchema == "" {
+	if c.DBSchema == "" && s.DBType() != "sqlite" {
 		c.DBSchema = "public"
 	}
 
