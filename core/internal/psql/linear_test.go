@@ -137,7 +137,7 @@ func TestLinearExecutionSQLite(t *testing.T) {
     if !strings.Contains(sql, "INSERT INTO _gj_ids") {
         t.Errorf("Expected INSERT INTO _gj_ids")
     }
-     if !strings.Contains(sql, "DROP TABLE _gj_ids") {
-        t.Errorf("Expected DROP TABLE _gj_ids")
+     if !strings.Contains(sql, "DROP TABLE IF EXISTS _gj_ids") {
+        t.Errorf("Expected DROP TABLE IF EXISTS _gj_ids")
     }
 }

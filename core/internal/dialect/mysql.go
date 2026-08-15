@@ -2,6 +2,8 @@ package dialect
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/dosco/graphjin/core/v3/internal/qcode"
 	"github.com/dosco/graphjin/core/v3/internal/sdata"
 	"github.com/dosco/graphjin/core/v3/internal/util"
@@ -610,4 +612,105 @@ func joinPathMySQL(ctx Context, prefix string, path []string, enableCamelcase bo
 		}
 		ctx.WriteString(`'`)
 	}
+}
+
+func (d *MySQLDialect) SplitQuery(query string) (parts []string) {
+	var buf strings.Builder
+	var inStr, inQuote, inBacktick, inComment bool
+	var depth int
+
+	for i := 0; i < len(query); i++ {
+		c := query[i]
+
+		if inComment {
+			if c == '\n' {
+				inComment = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		if inStr {
+			if c == '\'' {
+				if i+1 < len(query) && query[i+1] == '\'' {
+					buf.WriteByte(c)
+					i++
+					buf.WriteByte(c)
+					continue
+				}
+				inStr = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		if inQuote {
+			if c == '"' {
+				if i+1 < len(query) && query[i+1] == '"' {
+					buf.WriteByte(c)
+					i++
+					buf.WriteByte(c)
+					continue
+				}
+				inQuote = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		if inBacktick {
+			if c == '`' {
+				if i+1 < len(query) && query[i+1] == '`' {
+					buf.WriteByte(c)
+					i++
+					buf.WriteByte(c)
+					continue
+				}
+				inBacktick = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		switch c {
+		case '\'':
+			inStr = true
+			buf.WriteByte(c)
+		case '"':
+			inQuote = true
+			buf.WriteByte(c)
+		case '`':
+			inBacktick = true
+			buf.WriteByte(c)
+		case '-':
+			if i+1 < len(query) && query[i+1] == '-' {
+				inComment = true
+				buf.WriteByte(c)
+				i++
+				buf.WriteByte('-')
+			} else {
+				buf.WriteByte(c)
+			}
+		case '#':
+			inComment = true
+			buf.WriteByte(c)
+		case ';':
+			if depth == 0 {
+				q := strings.TrimSpace(buf.String())
+				if q != "" {
+					parts = append(parts, q)
+				}
+				buf.Reset()
+			} else {
+				buf.WriteByte(c)
+			}
+		default:
+			buf.WriteByte(c)
+		}
+	}
+	q := strings.TrimSpace(buf.String())
+	if q != "" {
+		parts = append(parts, q)
+	}
+	return parts
 }

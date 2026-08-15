@@ -627,3 +627,7 @@ func joinPathPostgres(ctx Context, prefix string, path []string, enableCamelcase
 		ctx.WriteString(`'`)
 	}
 }
+
+func (d *PostgresDialect) SplitQuery(query string) (parts []string) {
+	return []string{query}
+}

@@ -2,6 +2,7 @@ package dialect
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/dosco/graphjin/core/v3/internal/qcode"
 	"github.com/dosco/graphjin/core/v3/internal/sdata"
@@ -393,18 +394,39 @@ func (d *SQLiteDialect) RenderInsert(ctx Context, m *qcode.Mutate, values func()
 }
 
 func (d *SQLiteDialect) RenderUpdate(ctx Context, m *qcode.Mutate, set func(), from func(), where func()) {
+	// Pre-select IDs into _gj_ids for later use by the SELECT query
+	vName := getVarName(m)
+	ctx.WriteString(`INSERT INTO _gj_ids (k, id) SELECT '`)
+	ctx.WriteString(vName)
+	ctx.WriteString(`', `)
+	ctx.ColWithTable(m.Ti.Name, m.Ti.PrimaryCol.Name)
+	ctx.WriteString(` FROM `)
+	ctx.ColWithTable(m.Ti.Schema, m.Ti.Name)
+	ctx.WriteString(` AS `)
+	ctx.Quote(m.Ti.Name)
+	if from != nil {
+		ctx.WriteString(`, `) // Comma for implicit join in SELECT
+		from()
+	}
+	ctx.WriteString(` WHERE `)
+	where()
+	ctx.WriteString(`; `)
+
 	ctx.WriteString(`UPDATE `)
 	ctx.ColWithTable(m.Ti.Schema, m.Ti.Name)
 	ctx.WriteString(` SET `)
 	set()
 	if from != nil {
-		ctx.WriteString(` FROM `)
+		ctx.WriteString(` FROM `) // SQLite UPDATE FROM syntax
 		from()
 	}
 	ctx.WriteString(` WHERE `)
 	where()
 }
 
+func getVarName(m *qcode.Mutate) string {
+	return m.Ti.Name + "_" + fmt.Sprintf("%d", m.ID)
+}
 func (d *SQLiteDialect) RenderDelete(ctx Context, m *qcode.Mutate, where func()) {
 	ctx.WriteString(`DELETE FROM `)
 	ctx.ColWithTable(m.Ti.Schema, m.Ti.Name)
@@ -503,10 +525,11 @@ func (d *SQLiteDialect) RenderVar(ctx Context, name string) {
 
 func (d *SQLiteDialect) RenderSetup(ctx Context) {
 	ctx.WriteString(`CREATE TEMP TABLE IF NOT EXISTS _gj_ids (k TEXT PRIMARY KEY, id INTEGER); `)
+	ctx.WriteString(`CREATE TEMP TABLE IF NOT EXISTS _gj_conflicts (k TEXT PRIMARY KEY, v TEXT NOT NULL); `)
 }
 
 func (d *SQLiteDialect) RenderTeardown(ctx Context) {
-	ctx.WriteString(`; DROP TABLE _gj_ids`)
+	ctx.WriteString(`; DROP TABLE IF EXISTS _gj_ids; DROP TABLE IF EXISTS _gj_conflicts; DROP TRIGGER IF EXISTS gj_capture; `)
 }
 
 func (d *SQLiteDialect) RenderMutateToRecordSet(ctx Context, m *qcode.Mutate, n int, renderRoot func()) {
@@ -574,4 +597,126 @@ func joinPathSQLite(ctx Context, prefix string, path []string, enableCamelcase b
 		}
 		ctx.WriteString(`'`)
 	}
+}
+
+func (d *SQLiteDialect) SplitQuery(query string) (parts []string) {
+	var buf strings.Builder
+	var inStr, inQuote, inComment bool
+	var depth int
+
+	// Helper to check if we are at a keyword
+	isKeyword := func(q string, i int, kw string) bool {
+		if len(q)-i < len(kw) {
+			return false
+		}
+		// Check word match
+		if !strings.EqualFold(q[i:i+len(kw)], kw) {
+			return false
+		}
+		// Check boundaries
+		if i > 0 {
+			c := q[i-1]
+			if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' {
+				return false
+			}
+		}
+		if i+len(kw) < len(q) {
+			c := q[i+len(kw)]
+			if (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' {
+				return false
+			}
+		}
+		return true
+	}
+
+	for i := 0; i < len(query); i++ {
+		c := query[i]
+
+		if inComment {
+			if c == '\n' {
+				inComment = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		if inStr {
+			if c == '\'' {
+				if i+1 < len(query) && query[i+1] == '\'' {
+					buf.WriteByte(c)
+					i++
+					buf.WriteByte(c)
+					continue
+				}
+				inStr = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		if inQuote {
+			if c == '"' {
+				if i+1 < len(query) && query[i+1] == '"' {
+					buf.WriteByte(c)
+					i++
+					buf.WriteByte(c)
+					continue
+				}
+				inQuote = false
+			}
+			buf.WriteByte(c)
+			continue
+		}
+
+		// Detect BEGIN/END for Triggers and Case statements (simple nesting)
+		// Only check if not in string/quote/comment
+		if c == 'B' || c == 'b' {
+			if isKeyword(query, i, "BEGIN") {
+				depth++
+			}
+		}
+		if c == 'E' || c == 'e' {
+			if isKeyword(query, i, "END") {
+				if depth > 0 {
+					depth--
+				}
+			}
+		}
+
+		switch c {
+		case '\'':
+			inStr = true
+			buf.WriteByte(c)
+		case '"':
+			inQuote = true
+			buf.WriteByte(c)
+		case '-':
+			if i+1 < len(query) && query[i+1] == '-' {
+				inComment = true
+				buf.WriteByte(c)
+				i++
+				buf.WriteByte('-')
+			} else {
+				buf.WriteByte(c)
+			}
+		case ';':
+			// Only split if we are at depth 0 (not inside BEGIN...END)
+			if depth == 0 {
+				q := strings.TrimSpace(buf.String())
+				if q != "" {
+					parts = append(parts, q)
+				}
+				buf.Reset()
+			} else {
+				buf.WriteByte(c)
+			}
+		default:
+			buf.WriteByte(c)
+		}
+	}
+	q := strings.TrimSpace(buf.String())
+	if q != "" {
+		parts = append(parts, q)
+	}
+	return parts
 }

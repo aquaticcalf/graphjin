@@ -264,32 +264,45 @@ func (c *compilerContext) renderLinearInsert(m qcode.Mutate) {
 }
 
 func (c *compilerContext) renderLinearUpdate(m qcode.Mutate) {
-    c.dialect.RenderUpdate(c, &m, func() {
-         i := 0
-         for _, col := range m.Cols {
-             if i != 0 { c.w.WriteString(", ") }
-             c.w.WriteString(col.Col.Name)
-             c.w.WriteString(" = ")
-             c.renderColumnValue(m, col)
-             i++
-         }
-         
-         for _, rcol := range m.RCols {
-             if i != 0 { c.w.WriteString(", ") }
-             c.w.WriteString(rcol.Col.Name)
-             c.w.WriteString(" = ")
-             
-             found := false
-             for id := range m.DependsOn {
-                 if c.qc.Mutates[id].Ti.Name == rcol.VCol.Table {
-                     c.dialect.RenderVar(c, c.getVarName(c.qc.Mutates[id]))
-                     found = true
-                     break
-                 }
-             }
-             if !found { c.w.WriteString("NULL") }
-             i++
-         }
+	var fromFunc func()
+	if m.IsJSON {
+		fromFunc = func() {
+			c.renderMutateToRecordSet(m, 0)
+		}
+	}
+
+	c.dialect.RenderUpdate(c, &m, func() {
+		i := 0
+		for _, col := range m.Cols {
+			if i != 0 {
+				c.w.WriteString(", ")
+			}
+			c.w.WriteString(col.Col.Name)
+			c.w.WriteString(" = ")
+			c.renderColumnValue(m, col)
+			i++
+		}
+
+		for _, rcol := range m.RCols {
+			if i != 0 {
+				c.w.WriteString(", ")
+			}
+			c.w.WriteString(rcol.Col.Name)
+			c.w.WriteString(" = ")
+
+			found := false
+			for id := range m.DependsOn {
+				if c.qc.Mutates[id].Ti.Name == rcol.VCol.Table {
+					c.dialect.RenderVar(c, c.getVarName(c.qc.Mutates[id]))
+					found = true
+					break
+				}
+			}
+			if !found {
+				c.w.WriteString("NULL")
+			}
+			i++
+		}
 
 		if i == 0 {
 			// No columns to update, render dummy update to keep SQL valid
@@ -298,11 +311,7 @@ func (c *compilerContext) renderLinearUpdate(m qcode.Mutate) {
 			c.w.WriteString(" = ")
 			c.colWithTable(m.Ti.Name, m.Ti.PrimaryCol.Name)
 		}
-    	}, func() {
-		if m.IsJSON {
-			c.renderMutateToRecordSet(m, 0)
-		} 
-	}, func() {
+	}, fromFunc, func() {
 		hasWhere := false
 		
 		// MySQL/Postgres: Add join condition to WHERE clause

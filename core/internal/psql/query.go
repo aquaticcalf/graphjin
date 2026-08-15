@@ -80,6 +80,10 @@ func NewCompiler(conf Config) *Compiler {
 	}
 }
 
+func (c *Compiler) GetDialect() dialect.Dialect {
+	return c.dialect
+}
+
 func (co *Compiler) CompileEx(qc *qcode.QCode) (Metadata, []byte, error) {
 	var w bytes.Buffer
 

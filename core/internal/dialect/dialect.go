@@ -78,4 +78,6 @@ type Dialect interface {
 	RenderTeardown(ctx Context)
 	RenderMutateToRecordSet(ctx Context, m *qcode.Mutate, n int, renderRoot func())
 	RenderSetSessionVar(ctx Context, name, value string) bool
+
+	SplitQuery(query string) []string
 }
