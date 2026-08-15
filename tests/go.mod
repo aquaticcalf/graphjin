@@ -7,6 +7,7 @@ toolchain go1.23.1
 require (
 	github.com/aegion-dynamic/graphjin/conf/v3 v3.0.0
 	github.com/aegion-dynamic/graphjin/core/v3 v3.0.0
+	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/orlangure/gnomock v0.30.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/sync v0.8.0

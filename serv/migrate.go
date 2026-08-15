@@ -58,6 +58,8 @@ func idColSql(dbtype string) string {
 	switch dbtype {
 	case "mysql":
 		return "NOT NULL AUTO_INCREMENT PRIMARY KEY"
+	case "sqlite":
+		return "INTEGER PRIMARY KEY AUTOINCREMENT"
 	default:
 		return "GENERATED ALWAYS AS IDENTITY PRIMARY KEY"
 	}

@@ -428,8 +428,10 @@ func (g *GraphJin) generateFieldSchemaFromQCode(field qcode.Field, tableInfo *sd
 // columnToOpenAPISchema converts a database column to OpenAPI schema
 // Uses the same logic as GraphJin's getType and getTypeFromColumn functions
 func (g *GraphJin) columnToOpenAPISchema(col sdata.DBColumn) Schema {
-	// Use GraphJin's type resolution for primary keys
-	if col.PrimaryKey {
+	// Use GraphJin's type resolution for primary keys. On databases where the
+	// primary key is not a UUID (eg. SQLite INTEGER PRIMARY KEY) fall through to
+	// the regular column type mapping instead of assuming a uuid.
+	if col.PrimaryKey && strings.Contains(strings.ToLower(col.Type), "uuid") {
 		schema := Schema{Type: "string", Format: "uuid", Description: "Primary key"}
 		if col.Array {
 			return Schema{Type: "array", Items: &schema}

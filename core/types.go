@@ -16,6 +16,23 @@ var dbTypes map[string]string = map[string]string{
 	"double precision":            "Float",
 	"money":                       "Float",
 	"boolean":                     "Boolean",
+	// SQLite types
+	"blob":      "String",
+	"varchar":   "String",
+	"character": "String",
+	"char":      "String",
+	"timestamp": "String",
+	"datetime":  "String",
+	"date":      "String",
+	"time":      "String",
+	"int":       "Int",
+	"int2":      "Int",
+	"int8":      "Int",
+	"mediumint": "Int",
+	"tinyint":   "Int",
+	"bool":      "Boolean",
+	"double":    "Float",
+	"float":     "Float",
 }
 
 type dirArg struct {

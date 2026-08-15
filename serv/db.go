@@ -15,6 +15,7 @@ import (
 	"go.uber.org/zap"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "modernc.org/sqlite"
 )
 
 const (
@@ -59,11 +60,17 @@ func newDB(
 			conf.Core.DBType = "mysql"
 			conf.DB.ConnString = strings.TrimPrefix(cs, "mysql://")
 		}
+		if strings.HasPrefix(cs, "sqlite://") {
+			conf.Core.DBType = "sqlite"
+			conf.DB.ConnString = strings.TrimPrefix(cs, "sqlite://")
+		}
 	}
 
 	switch conf.Core.DBType {
 	case "mysql":
 		dc, err = initMysql(conf, openDB, useTelemetry, fs)
+	case "sqlite":
+		dc, err = initSqlite(conf, openDB, useTelemetry, fs)
 	default:
 		dc, err = initPostgres(conf, openDB, useTelemetry, fs)
 	}
@@ -214,6 +221,19 @@ func initMysql(conf *Config, openDB, useTelemetry bool, fs core.FS) (*dbConf, er
 	}
 
 	return &dbConf{"mysql", connString}, nil
+}
+
+// initSqlite initializes the sqlite database
+func initSqlite(conf *Config, openDB, useTelemetry bool, fs core.FS) (*dbConf, error) {
+	connString := conf.DB.ConnString
+	if connString == "" {
+		connString = conf.DB.Path
+	}
+	if connString == "" {
+		return nil, fmt.Errorf("sqlite requires a connection string or path")
+	}
+
+	return &dbConf{"sqlite", connString}, nil
 }
 
 // loadX509KeyPair loads a X509 key pair from a file system
